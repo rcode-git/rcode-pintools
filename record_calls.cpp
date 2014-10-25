@@ -5,13 +5,13 @@
 FILE *file = NULL;
 KNOB<string> KnobOutputFile(KNOB_MODE_WRITEONCE, "pintool", "o", "isolate.out", "specify output file name");
 
+int record = 0;
 
 VOID record_calls(INS ins, VOID *v)
 {
-    if (INS_IsCall(ins))
-    {
-        fprintf(file,"%lx\n",INS_Address(ins));
-    }
+    if (record) { fprintf(file,"%lx\n",INS_Address(ins)); record = 0; }
+
+    if (INS_IsCall(ins)) record = 1;
 }
 
 void usage()
